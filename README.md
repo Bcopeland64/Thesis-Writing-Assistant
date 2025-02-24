@@ -160,7 +160,7 @@ This project is licensed under the **MIT License**. See the [LICENSE](LICENSE) f
 
 For questions, feedback, or support, feel free to reach out:
 - Email: brandon.copeland@iu-study.org
-- GitHub Issues: [https://github.com/your-repo/thesis_assistant/issues](https://github.com/your-repo/thesis_assistant/issues)
+- GitHub Issues: https://github.com/Bcopeland64/Thesis-Writing-Assistant/issues
 
 ---
 
