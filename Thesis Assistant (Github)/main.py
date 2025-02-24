@@ -9,6 +9,8 @@ from utils.reference_management import generate_citation
 from utils.presentation_preparation import create_presentation_outline
 from utils.data_visualization import plot_data
 from utils.defense_preparation import get_defense_questions, prepare_responses
+from utils.methodology_guidance import suggest_methodology, suggest_data_collection
+from utils.thesis_structure import generate_outline
 
 # Custom CSS for styling
 st.markdown("""
@@ -42,7 +44,9 @@ feature = st.sidebar.radio(
         "Proofreading",
         "Time Management",
         "Presentation Preparation",
-        "Defense Preparation"
+        "Defense Preparation",
+        "Methodology Guidance",
+        "Thesis Structure"
     ],
     key="feature_selection"
 )
@@ -57,8 +61,17 @@ if feature == "Topic Refinement":
 
 elif feature == "Literature Review":
     query = st.text_input("Enter a keyword for literature search:")
+    if st.button("Search Literature"):
+        with st.spinner("Searching..."):
+            results = search_literature(query)
+        st.success("Relevant Papers Found:")
+        st.write(results)
+
     paper_title = st.text_input("Enter a paper title to summarize:")
-    task = st.radio("Task", ["Search Literature", "Summarize Paper"])
+    if st.button("Summarize Paper"):
+        summary = summarize_paper(paper_title)
+        st.success("Paper Summary:")
+        st.write(summary)
 
 elif feature == "Writing Assistance":
     text = st.text_area("Enter text for writing assistance:")
@@ -80,6 +93,14 @@ elif feature == "Defense Preparation":
     response_text = st.text_area("Enter your response to a question:")
     task = st.radio("Task", ["Get Defense Questions", "Prepare Response"])
 
+elif feature == "Methodology Guidance":
+    research_question = st.text_input("Enter your research question:")
+    task = st.radio("Task", ["Suggest Methodology", "Suggest Data Collection"])
+
+elif feature == "Thesis Structure":
+    format_style = st.selectbox("Select Format Style", ["APA", "MLA", "Chicago", "IEEE"])
+    task = "Generate Outline"
+
 # Universal "Run" Button
 if st.button("Run"):
     if feature == "Topic Refinement":
@@ -98,7 +119,7 @@ if st.button("Run"):
             st.write(results)
         elif task == "Summarize Paper":
             summary = summarize_paper(paper_title)
-            st.success("Summary:")
+            st.success("Paper Summary:")
             st.write(summary)
 
     elif feature == "Writing Assistance":
@@ -135,6 +156,22 @@ if st.button("Run"):
             prepared_response = prepare_responses(response_text)
             st.success("Prepared Response:")
             st.write(prepared_response)
+
+    elif feature == "Methodology Guidance":
+        if task == "Suggest Methodology":
+            methodology = suggest_methodology(research_question)
+            st.success("Suggested Methodology:")
+            st.write(methodology)
+        elif task == "Suggest Data Collection":
+            methodology = suggest_methodology(research_question)
+            data_collection = suggest_data_collection(methodology)
+            st.success("Suggested Data Collection Techniques:")
+            st.write(data_collection)
+
+    elif feature == "Thesis Structure":
+        outline = generate_outline(format_style)
+        st.success("Thesis Outline:")
+        st.write(outline)
 
 # Footer
 st.markdown("---")
