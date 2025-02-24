@@ -1,7 +1,3 @@
-# Thesis-Writing-Assistant
-
-Here’s a professional and well-structured **GitHub README.md** file for your **Thesis Assistant Platform**. It includes installation instructions, descriptions of the utilities, and additional details to help users understand and use the platform effectively.
-
 ---
 
 # **Thesis Assistant Platform**
