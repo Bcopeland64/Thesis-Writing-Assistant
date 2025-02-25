@@ -1,63 +1,15 @@
 # utils/thesis_structure.py
+from utils.groq_api import call_groq
 
 def generate_outline(format_style="apa"):
+    supported_styles = ["APA", "MLA", "Chicago", "IEEE"]
+    if format_style not in supported_styles:
+        raise ValueError(f"Unsupported format style: {format_style}. Choose from {supported_styles}.")
+    prompt = f"""
+    Generate a detailed thesis outline in {format_style.upper()} format.
+    Include chapter-specific writing tips and templates for each section.
+    Provide word count estimations for each section.
+    Include checklists for completing each chapter.
+    Suggest submission guidelines for different universities.
     """
-    Generates a thesis outline based on the selected format style (APA, MLA, Chicago, IEEE).
-    """
-    if format_style.lower() == "apa":
-        return """APA Thesis Outline:
-        1. Title Page
-        2. Abstract
-        3. Table of Contents
-        4. Introduction
-        5. Literature Review
-        6. Methodology
-        7. Results
-        8. Discussion
-        9. Conclusion
-        10. References
-        11. Appendices"""
-    
-    elif format_style.lower() == "mla":
-        return """MLA Thesis Outline:
-        1. Title Page
-        2. Abstract
-        3. Table of Contents
-        4. Introduction
-        5. Background and Context
-        6. Research Methodology
-        7. Findings
-        8. Analysis
-        9. Conclusion
-        10. Works Cited
-        11. Appendices"""
-    
-    elif format_style.lower() == "chicago":
-        return """Chicago Thesis Outline:
-        1. Title Page
-        2. Abstract
-        3. Table of Contents
-        4. Introduction
-        5. Literature Review
-        6. Research Design and Methodology
-        7. Results and Analysis
-        8. Discussion
-        9. Conclusion
-        10. Bibliography
-        11. Appendices"""
-    
-    elif format_style.lower() == "ieee":
-        return """IEEE Thesis Outline:
-        1. Title Page
-        2. Abstract
-        3. Keywords
-        4. Introduction
-        5. Related Work
-        6. Methodology
-        7. Results and Discussion
-        8. Conclusion
-        9. References
-        10. Appendices"""
-    
-    else:
-        return "Unsupported format style. Please choose from APA, MLA, Chicago, or IEEE."
+    return call_groq(prompt)

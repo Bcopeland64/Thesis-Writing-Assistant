@@ -1,23 +1,23 @@
 # utils/methodology_guidance.py
+from utils.groq_api import call_groq
 
 def suggest_methodology(research_question):
+    if not research_question.strip():
+        raise ValueError("Research question cannot be empty.")
+    prompt = f"""
+    Suggest a suitable research methodology for this research question: {research_question}.
+    Justify the choice and provide examples of similar studies using the same methodology.
+    Highlight ethical considerations for this methodology.
+    Suggest software/tools for implementing the methodology.
     """
-    Suggests a suitable research methodology based on the research question.
-    """
-    if "quantitative" in research_question.lower() or "statistical" in research_question.lower():
-        return "Quantitative Methodology: Use surveys, experiments, or statistical analysis."
-    elif "qualitative" in research_question.lower() or "interview" in research_question.lower():
-        return "Qualitative Methodology: Use interviews, case studies, or thematic analysis."
-    else:
-        return "Mixed Methods: Combine both qualitative and quantitative approaches for comprehensive insights."
+    return call_groq(prompt)
 
 def suggest_data_collection(methodology):
+    if not methodology.strip():
+        raise ValueError("Methodology cannot be empty.")
+    prompt = f"""
+    Suggest data collection techniques for this methodology: {methodology}.
+    Include tools or software recommendations for implementation.
+    Suggest data validation techniques to ensure reliability.
     """
-    Suggests data collection techniques based on the chosen methodology.
-    """
-    if "quantitative" in methodology.lower():
-        return "Data Collection Techniques: Surveys, Experiments, Observations, or Secondary Data Analysis."
-    elif "qualitative" in methodology.lower():
-        return "Data Collection Techniques: Interviews, Focus Groups, Case Studies, or Document Analysis."
-    else:
-        return "Data Collection Techniques: Combine surveys/interviews with observations or document analysis."
+    return call_groq(prompt)
