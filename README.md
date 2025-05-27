@@ -1,175 +1,119 @@
----
+# ThesisAI - Research Assistant Web Application
 
-# **Thesis Assistant Platform**
+## Overview
 
-The **Thesis Assistant Platform** is an all-in-one tool designed to support students throughout their thesis journey. From topic refinement to defense preparation, this platform leverages AI-powered utilities to streamline research, writing, and presentation tasks.
+ThesisAI is a web application designed to assist users in their research and thesis writing process. This initial version focuses on providing core functionalities such as user authentication and literature management, including searching for academic papers and summarizing them using the Groq AI services. The goal is to streamline the research workflow and provide intelligent assistance to academic users.
 
----
+## Project Structure
 
-## **Features**
+The project is organized into two main directories:
 
-The platform offers the following utilities:
+*   `backend/`: Contains the FastAPI application that serves as the API for the project. It handles business logic, database interactions, and communication with external AI services.
+*   `frontend/`: Contains the React (TypeScript) single-page application that provides the user interface.
 
-### **1. Topic Refinement & Research Question Development**
-- Helps refine thesis topics and generate clear, concise research questions.
-- Ideal for brainstorming and narrowing down ideas.
+## Prerequisites
 
-### **2. Literature Review Assistance**
-- Recommends relevant academic papers and sources based on keywords.
-- Summarizes key findings from academic papers to save time.
+Before you begin, ensure you have the following installed:
 
-### **3. Writing Assistance & Draft Review**
-- Improves clarity, coherence, and academic tone in your writing.
-- Checks logical flow and argument strength in drafts.
+*   **Python:** Version 3.8 or higher.
+*   **Node.js and npm:** Node.js version 16.x or higher, npm version 8.x or higher.
+    *   *Note:* While the project might run on other versions, these are recommended. The environment has shown some warnings with Node v18 and react-router-dom v7.6.1 which expects Node >=20.0.0.
+*   **Database:**
+    *   The backend defaults to using **SQLite**. No separate database server installation is required for the default setup.
+    *   **PostgreSQL** can be configured as an alternative (see Backend Setup).
 
-### **4. Proofreading & Language Enhancement**
-- Detects grammar, spelling, and punctuation errors.
-- Enhances vocabulary and ensures consistency in terminology.
+## Backend Setup
 
-### **5. Time Management**
-- Creates timelines for thesis tasks with deadlines.
-- Helps track progress and stay organized.
+1.  **Navigate to the backend directory:**
+    ```bash
+    cd backend
+    ```
 
-### **6. Presentation Preparation**
-- Generates outlines for thesis presentations.
-- Ensures structured and professional delivery of your work.
+2.  **Create and activate a virtual environment:**
+    *   On macOS and Linux:
+        ```bash
+        python3 -m venv venv
+        source venv/bin/activate
+        ```
+    *   On Windows:
+        ```bash
+        python -m venv venv
+        venv\\Scripts\\activate
+        ```
 
-### **7. Defense Preparation**
-- Provides common defense questions and tips for responding effectively.
-- Prepares students for thesis defense scenarios.
+3.  **Install dependencies:**
+    ```bash
+    pip install -r requirements.txt
+    ```
 
-### **8. Reference Management**
-- Generates citations in multiple formats (APA, MLA, Chicago).
-- Simplifies reference formatting for academic writing.
+4.  **Environment Variables:**
+    *   The backend requires certain environment variables to function correctly. These are managed using a `.env` file in the `backend` directory.
+    *   A sample configuration is provided in `backend/.env.example`. Copy this file to `.env` and update it with your specific values:
+        ```bash
+        cp .env.example .env
+        ```
+    *   **Key variables to configure in `.env`:**
+        *   `GROQ_API_KEY`: Your API key for Groq services. This is essential for literature search and summarization features.
+        *   `SECRET_KEY`: A secret key for JWT token generation. The example file provides a default, but it's recommended to change this to a strong, unique key.
+        *   `SQLALCHEMY_DATABASE_URL`:
+            *   Defaults to `sqlite:///./test.db` for SQLite, which will create a `test.db` file in the `backend` directory.
+            *   To use PostgreSQL, you would change this to a PostgreSQL connection string, e.g., `postgresql://user:password@host:port/database_name`. Ensure `psycopg2-binary` (already in `requirements.txt`) is used.
 
-### **9. Data Visualization**
-- Visualizes datasets using plots and graphs.
-- Supports basic data analysis and exploration.
+5.  **Running the backend:**
+    *   From within the `backend` directory (with the virtual environment activated):
+        ```bash
+        uvicorn app.main:app --reload --port 8000
+        ```
+    *   The API server will typically be available at `http://localhost:8000`.
 
----
+## Frontend Setup
 
-## **Installation Instructions**
+1.  **Navigate to the frontend directory:**
+    ```bash
+    cd frontend
+    ```
 
-### **Prerequisites**
-- Python 3.8 or higher installed.
-- A Groq API key (sign up at [Groq](https://groq.com)).
-- Basic knowledge of Python and Streamlit.
+2.  **Install dependencies:**
+    *   If you encounter issues with `npm install` related to `node_modules/.bin` or `npx` not finding executables (as observed during development of this project), ensure your Node.js and npm installation is correct and that your `PATH` is configured properly.
+    ```bash
+    npm install
+    ```
 
-### **Step 1: Clone the Repository**
-Clone the repository to your local machine:
-```bash
-git clone https://github.com/your-repo/thesis_assistant.git
-cd thesis_assistant
-```
+3.  **Running the frontend:**
+    ```bash
+    npm start
+    ```
+    *   This command usually starts the React development server on `http://localhost:3000`.
+    *   The frontend application is configured to proxy API requests to the backend server (running at `http://localhost:8000` by default) to avoid CORS issues during development. This is set up in `frontend/package.json`.
 
-### **Step 2: Set Up a Virtual Environment**
-Create and activate a virtual environment:
-```bash
-python3 -m venv venv
-source venv/bin/activate  # On macOS/Linux
-venv\Scripts\activate     # On Windows
-```
+## Running Tests
 
-### **Step 3: Install Dependencies**
-Install the required dependencies:
-```bash
-pip install -r requirements.txt
-```
+*   **Backend Tests:**
+    *   Ensure you are in the `backend` directory and your virtual environment is activated.
+    *   The tests use a separate SQLite database (`test.db`) that is created and destroyed during the test session.
+    ```bash
+    pytest
+    ```
 
-For Spacy, download the language model:
-```bash
-python -m spacy download en_core_web_sm
-```
+*   **Frontend Tests:**
+    *   Ensure you are in the `frontend` directory.
+    ```bash
+    npm test
+    ```
 
-### **Step 4: Configure the Groq API Key**
-Add your Groq API key to a `.env` file in the project directory:
-```plaintext
-GROQ_API_KEY=your_groq_api_key
-```
+## API Access
 
-Alternatively, set it as an environment variable:
-```bash
-export GROQ_API_KEY=your_groq_api_key  # On macOS/Linux
-set GROQ_API_KEY=your_groq_api_key     # On Windows
-```
+*   The backend API is versioned and accessible under the `/api/v1` prefix (e.g., `/api/v1/auth/login`).
+*   Most API endpoints, particularly those related to literature services, require JWT authentication. The token must be included in the `Authorization` header as a Bearer token.
 
-### **Step 5: Run the App**
-Start the Streamlit app:
-```bash
-streamlit run main.py
-```
+## Next Steps / Future Work
 
-The app will open in your default web browser.
-
----
-
-## **Usage**
-
-### **Sidebar Navigation**
-- Use the radio buttons in the sidebar to select a feature (e.g., "Topic Refinement", "Literature Review").
-- Input fields will dynamically update based on the selected feature.
-
-### **Universal "Run" Button**
-- After entering the required inputs, click the "Run" button to execute the selected task.
-- Outputs will appear below the button with clear success messages.
-
----
-
-## **Project Structure**
-
-```
-thesis_assistant/
-│
-├── main.py                # Main Streamlit app
-├── utils/                 # Utility functions
-│   ├── topic_refinement.py
-│   ├── literature_review.py
-│   ├── writing_assistance.py
-│   ├── proofreading.py
-│   ├── time_management.py
-│   ├── presentation_preparation.py
-│   ├── defense_preparation.py
-│   ├── reference_management.py
-│   └── data_visualization.py
-├── data/                  # Store datasets or user progress
-│   └── user_progress.json
-├── .env                   # Environment variables (e.g., API keys)
-└── requirements.txt        # List of dependencies
-```
+This project provides a foundational implementation of an AI-assisted research tool. Future enhancements could include:
+*   Expanding the range of AI-powered assistance features (e.g., writing assistance, reference management).
+*   Support for more data sources and AI models.
+*   User interface improvements and more detailed user feedback.
+*   Full PostgreSQL integration and production deployment configurations.
+*   More comprehensive error handling and logging.
 
 ---
-
-## **Contributing**
-
-We welcome contributions to improve the Thesis Assistant Platform! To contribute:
-1. Fork the repository.
-2. Create a new branch (`git checkout -b feature/YourFeatureName`).
-3. Commit your changes (`git commit -m "Add YourFeatureName"`).
-4. Push to the branch (`git push origin feature/YourFeatureName`).
-5. Open a pull request.
-
----
-
-## **License**
-
-This project is licensed under the **MIT License**. See the [LICENSE](LICENSE) file for details.
-
----
-
-## **Contact**
-
-For questions, feedback, or support, feel free to reach out:
-- Email: brandon.copeland@iu-study.org
-- GitHub Issues: https://github.com/Bcopeland64/Thesis-Writing-Assistant/issues
-
----
-
-## **Acknowledgments**
-
-- **Streamlit**: For providing an easy-to-use framework for building interactive web apps.
-- **Groq API**: For enabling fast and efficient LLM inference.
-- **Spacy**: For natural language processing capabilities.
-
----
-
-T
+*This README was generated based on the project state as of the last update.*
