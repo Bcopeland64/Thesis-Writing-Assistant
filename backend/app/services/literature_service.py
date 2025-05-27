@@ -1,8 +1,11 @@
-# utils/literature_review.py
-from utils.groq_api import call_groq
+# services/literature_service.py
+from backend.app.services.groq_service import call_groq
+from fastapi import HTTPException # For propagating errors if needed
 
-def search_literature(query):
+def search_literature(query: str): # Added type hint
     if not query.strip():
+        # This could also be an HTTPException if called directly from a route handler
+        # For a service layer, ValueError is often fine, to be caught by the router.
         raise ValueError("Query cannot be empty.")
     prompt = f"""
     Recommend 5 highly relevant academic papers for this query: {query}.
@@ -12,9 +15,10 @@ def search_literature(query):
     - Relevance score (High, Medium, Low)
     - Open-access alternatives if the paper is behind a paywall
     """
-    return call_groq(prompt)
+    # Errors from call_groq (HTTPExceptions) will propagate up
+    return call_groq(prompt, max_tokens=500) # Increased max_tokens for detailed search results
 
-def summarize_paper(paper_title):
+def summarize_paper(paper_title: str): # Added type hint
     if not paper_title.strip():
         raise ValueError("Paper title cannot be empty.")
     prompt = f"""
@@ -33,4 +37,5 @@ def summarize_paper(paper_title):
     12. Contribution to the Field
     13. Sentiment Analysis of the Paper's Tone (Positive, Neutral, Critical)
     """
-    return call_groq(prompt)
+    # Errors from call_groq (HTTPExceptions) will propagate up
+    return call_groq(prompt, max_tokens=1000) # Increased max_tokens for detailed summary
