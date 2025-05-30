@@ -1,7 +1,7 @@
 # utils/presentation_preparation.py
-from utils.groq_api import call_groq
+from backend.app.services.groq_service import call_groq_async
 
-def create_presentation_outline(topic):
+async def create_presentation_outline(topic):
     if not topic.strip():
         raise ValueError("Topic cannot be empty.")
     prompt = f"""
@@ -10,4 +10,7 @@ def create_presentation_outline(topic):
     Suggest audience engagement strategies (e.g., storytelling, Q&A prompts).
     Provide templates for slide designs (minimalistic, infographic-style).
     """
-    return call_groq(prompt)
+    result = await call_groq_async(prompt)
+    if result == "GROQ_API_KEY_NOT_CONFIGURED":
+        return "Presentation outline generation is unavailable because the API key is not configured by the administrator."
+    return result

@@ -1,7 +1,7 @@
 # utils/proofreading.py
-from utils.groq_api import call_groq
+from backend.app.services.groq_service import call_groq_async
 
-def proofread(text):
+async def proofread(text):
     if not text.strip():
         raise ValueError("Text cannot be empty.")
     prompt = f"""
@@ -12,4 +12,7 @@ def proofread(text):
     Detect cultural biases in language usage and suggest neutral alternatives.
     Provide a readability score (Flesch-Kincaid Grade Level).
     """
-    return call_groq(prompt)
+    result = await call_groq_async(prompt)
+    if result == "GROQ_API_KEY_NOT_CONFIGURED":
+        return "Proofreading is unavailable because the API key is not configured by the administrator."
+    return result

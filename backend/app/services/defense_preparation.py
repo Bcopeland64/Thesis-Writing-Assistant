@@ -1,15 +1,18 @@
 # utils/defense_preparation.py
-from utils.groq_api import call_groq
+from backend.app.services.groq_service import call_groq_async
 
-def get_defense_questions():
+async def get_defense_questions():
     prompt = """
     Provide 5 common thesis defense questions and their follow-up questions.
     Include tips for answering each question confidently.
     Suggest stress management techniques for handling nerves during the defense.
     """
-    return call_groq(prompt)
+    result = await call_groq_async(prompt)
+    if result == "GROQ_API_KEY_NOT_CONFIGURED":
+        return "Defense question suggestions are unavailable because the API key is not configured by the administrator."
+    return result
 
-def prepare_responses(response_text):
+async def prepare_responses(response_text):
     if not response_text.strip():
         raise ValueError("Response text cannot be empty.")
     prompt = f"""
@@ -17,4 +20,7 @@ def prepare_responses(response_text):
     Include strategies for staying calm and confident during the defense.
     Provide body language tips for confident delivery (e.g., posture, eye contact).
     """
-    return call_groq(prompt)
+    result = await call_groq_async(prompt)
+    if result == "GROQ_API_KEY_NOT_CONFIGURED":
+        return "Defense response preparation is unavailable because the API key is not configured by the administrator."
+    return result
