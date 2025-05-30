@@ -1,7 +1,7 @@
 # utils/methodology_guidance.py
-from utils.groq_api import call_groq
+from backend.app.services.groq_service import call_groq_async
 
-def suggest_methodology(research_question):
+async def suggest_methodology(research_question):
     if not research_question.strip():
         raise ValueError("Research question cannot be empty.")
     prompt = f"""
@@ -10,9 +10,12 @@ def suggest_methodology(research_question):
     Highlight ethical considerations for this methodology.
     Suggest software/tools for implementing the methodology.
     """
-    return call_groq(prompt)
+    result = await call_groq_async(prompt)
+    if result == "GROQ_API_KEY_NOT_CONFIGURED":
+        return "Methodology suggestion is unavailable because the API key is not configured by the administrator."
+    return result
 
-def suggest_data_collection(methodology):
+async def suggest_data_collection(methodology):
     if not methodology.strip():
         raise ValueError("Methodology cannot be empty.")
     prompt = f"""
@@ -20,4 +23,7 @@ def suggest_data_collection(methodology):
     Include tools or software recommendations for implementation.
     Suggest data validation techniques to ensure reliability.
     """
-    return call_groq(prompt)
+    result = await call_groq_async(prompt)
+    if result == "GROQ_API_KEY_NOT_CONFIGURED":
+        return "Data collection suggestion is unavailable because the API key is not configured by the administrator."
+    return result

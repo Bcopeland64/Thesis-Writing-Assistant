@@ -1,7 +1,7 @@
 # utils/thesis_structure.py
-from utils.groq_api import call_groq
+from backend.app.services.groq_service import call_groq_async
 
-def generate_outline(format_style="apa"):
+async def generate_outline(format_style="apa"):
     supported_styles = ["APA", "MLA", "Chicago", "IEEE"]
     if format_style not in supported_styles:
         raise ValueError(f"Unsupported format style: {format_style}. Choose from {supported_styles}.")
@@ -12,4 +12,7 @@ def generate_outline(format_style="apa"):
     Include checklists for completing each chapter.
     Suggest submission guidelines for different universities.
     """
-    return call_groq(prompt)
+    result = await call_groq_async(prompt)
+    if result == "GROQ_API_KEY_NOT_CONFIGURED":
+        return "Thesis outline generation is unavailable because the API key is not configured by the administrator."
+    return result

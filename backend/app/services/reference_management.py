@@ -1,7 +1,7 @@
 # utils/reference_management.py
-from utils.groq_api import call_groq
+from backend.app.services.groq_service import call_groq_async
 
-def generate_citation(title, author, year, style="apa"):
+async def generate_citation(title, author, year, style="apa"):
     if not title.strip() or not author.strip() or not year.strip():
         raise ValueError("Title, author, and year cannot be empty.")
     prompt = f"""
@@ -9,9 +9,12 @@ def generate_citation(title, author, year, style="apa"):
     Title: {title}, Author: {author}, Year: {year}.
     Suggest citation management tools (e.g., Zotero, Mendeley).
     """
-    return call_groq(prompt)
+    result = await call_groq_async(prompt)
+    if result == "GROQ_API_KEY_NOT_CONFIGURED":
+        return "Citation generation is unavailable because the API key is not configured by the administrator."
+    return result
 
-def detect_missing_references(text):
+async def detect_missing_references(text):
     if not text.strip():
         raise ValueError("Text cannot be empty.")
     prompt = f"""
@@ -19,4 +22,8 @@ def detect_missing_references(text):
     Suggest potential sources to fill the gaps.
     Deduplicate redundant citations and suggest citation style conversions (APA, MLA, Chicago, IEEE).
     """
-    return call_groq(prompt)
+    result = await call_groq_async(prompt)
+    if result == "GROQ_API_KEY_NOT_CONFIGURED":
+        # Using a generic message as this function is also related to references
+        return "Reference management features are unavailable because the API key is not configured by the administrator."
+    return result
